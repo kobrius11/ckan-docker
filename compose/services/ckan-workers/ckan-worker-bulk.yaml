@@ -1,0 +1,32 @@
+---
+services:
+  ckan-worker-bulk:
+    build:
+      context: ./services/ckan/image/dev
+      dockerfile: Dockerfile.dev
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      ckan-dev:
+        condition: service_healthy
+        restart: true
+      postgres:
+        condition: service_healthy
+        restart: true
+      solr:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - ./config/ckan/.env
+      - ./config/db/.env
+      - ./.global-env
+    volumes:
+      - ckan_data:/srv/app
+    entrypoint: ["ckan", "-c", "$CKAN_INI",
+                 "jobs", "worker", "bulk"]
+    healthcheck:
+      disable: true
+
+volumes:
+  ckan_data:

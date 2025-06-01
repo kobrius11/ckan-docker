@@ -1,0 +1,22 @@
+services:
+  nextjs:
+      build:
+        context: ./services/nextjs/image
+      # networks:
+      #   - frontend
+      #   - backend
+      depends_on:
+        ckan-dev:
+          condition: service_healthy
+          restart: true
+      ports:
+        - "0.0.0.0:${NEXTJS_PORT_HOST}:3000"
+      env_file:
+        - ./config/ckan/.env
+        - ./.global-env
+      restart: unless-stopped
+      healthcheck:
+        test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:3000"]
+        interval: 60s
+        timeout: 10s
+        retries: 3

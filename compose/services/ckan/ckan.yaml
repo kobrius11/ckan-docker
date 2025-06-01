@@ -1,0 +1,44 @@
+---
+services:
+  ckan-dev:
+      build:
+        context: ./services/ckan/image/dev
+        dockerfile: Dockerfile.dev
+        args:
+          - TZ=${TZ}
+      networks:
+        - frontend
+        - backend
+      depends_on:
+        postgres:
+          condition: service_healthy
+          restart: true
+        solr:
+          condition: service_healthy
+          restart: true
+      ports:
+        - "0.0.0.0:${CKAN_PORT_HOST}:5000"
+      env_file:
+        - ./config/db/.env
+        - ./config/ckan/.env
+        - ./.global-env
+      volumes:
+        - ckan_data:/srv/app
+        - src:/srv/app/src_extensions
+        - pip_cache:/root/.cache/pip
+        - site_packages:/usr/local/lib/python3.10/site-packages
+        - local_bin:/usr/local/bin
+        # - home_dir:/srv/app/
+      restart: unless-stopped
+      healthcheck:
+        test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:5000"]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+volumes:
+  ckan_data:
+  src:
+  pip_cache:
+  site_packages:
+  local_bin:
+  home_dir:

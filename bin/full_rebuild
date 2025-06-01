@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+
+set -e
+ROOT="$(dirname ${BASH_SOURCE[0]})/.."
+
+docker system prune -a --volumes -f
+docker compose -f "${ROOT}/compose/docker-compose.dev.yml" down --volumes --remove-orphans
+docker compose -f "${ROOT}/compose/docker-compose.dev.yml" build --no-cache
+docker compose -f "${ROOT}/compose/docker-compose.dev.yml" up --force-recreate
+
+

@@ -1,0 +1,53 @@
+---
+name: ckan
+
+include:
+  - path: services/ckan/ckan.yaml
+    env_file:
+      - config/ckan/.env
+      - .global-env
+    project_directory: .  
+  - path: services/nextjs/nextjs.yaml
+    env_file:
+      - config/nextjs/.env
+      - .global-env
+    project_directory: .
+  - path: services/ckan-workers/ckan-worker-default.yaml
+    env_file:
+      - config/ckan/.env
+      - .global-env
+    project_directory: .
+  - path: services/ckan-workers/ckan-worker-bulk.yaml
+    env_file:
+    - config/ckan/.env
+    - .global-env
+    project_directory: .
+  - path: services/ckan-workers/ckan-worker-priority.yaml
+    env_file:
+      - config/ckan/.env
+      - .global-env
+    project_directory: .
+  - path: services/postgresql/postgres.yaml
+    env_file:
+      - config/db/.env
+      - .global-env
+    project_directory: .
+  # - path: services/postgis/postgis.yaml
+  #   env_file:
+  #     - config/db/.env
+  #     - .global-env
+  #   project_directory: .
+  - path: services/solr/solr.yaml
+    env_file:
+      - config/solr/.env
+      - .global-env
+    project_directory: .
+  - path: services/redis/redis.yaml
+    env_file:
+      - config/redis/.env
+      - .global-env
+    project_directory: .
+
+networks:
+  frontend:
+  backend:

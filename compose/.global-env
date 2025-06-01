@@ -1,0 +1,13 @@
+#CKAN 
+CKAN_VERSION=2.11.3
+CKAN_INI=/srv/app/ckan.ini
+TZ=
+
+# Redis
+REDIS_VERSION=6.0.7
+
+# Node
+NODE_VERSION=24.1.0
+YARN_VERSION=1.22.22
+
+
