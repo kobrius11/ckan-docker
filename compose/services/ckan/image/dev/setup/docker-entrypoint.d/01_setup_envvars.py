@@ -16,3 +16,4 @@ if __name__ == "__main__":
     sc.set_ckanvar("ckan.plugins")
     sc.set_ckanvar("ckan.webassets.path")
     sc.set_ckanvar("ckan.webassets.url")
+    sc.set_ckanvar("ckan.cors.origin_allow_all")
