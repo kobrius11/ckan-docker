@@ -2,6 +2,7 @@ services:
   nextjs:
       build:
         context: ./services/nextjs/image
+        dockerfile: Dockerfile.dev
       networks:
         - frontend
         - backend
@@ -9,10 +10,12 @@ services:
         ckan-dev:
           condition: service_healthy
           restart: true
+      ports:
+        - "0.0.0.0:${NEXTJS_PORT_HOST}:3000"
       env_file:
         - ./config/nextjs/.env
         - ./.global-env
-      restart: always
+      restart: unless-stopped
       healthcheck:
         test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:3000"]
         interval: 60s

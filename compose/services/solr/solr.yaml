@@ -6,7 +6,7 @@ services:
       args:
         CKAN_BRANCH: ckan-${CKAN_VERSION}
     networks:
-      - backend
+      - solrnet
     env_file:
       - ./config/solr/.env
       - ./.global-env

@@ -113,6 +113,8 @@ RUN mkdir -p ${APP_DIR} && chown node:node ${APP_DIR}
 
 WORKDIR ${APP_DIR} 
 
+COPY --chown=node:node .env .env
+
 USER node
 
 RUN git clone https://github.com/kobrius11/ckan-frontend.git
@@ -121,12 +123,6 @@ WORKDIR ${FRONTEND_DIR}
 
 # COPY docker-entrypoint.sh /usr/local/bin/
 # ENTRYPOINT ["docker-entrypoint.sh"]
-COPY --chown=node:node .env .env
+RUN pnpm i
 
-RUN pnpm i \
-    && pnpm build
-
-USER node
-
-# CMD [ "pm2-runtime", "start", "pnpm", "--name", "ckan-frontend", "-- start" ]
-CMD ["pnpm", "start"]
+CMD [ "pnpm", "run", "dev" ]

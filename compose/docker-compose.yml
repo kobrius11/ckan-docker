@@ -1,110 +1,62 @@
-volumes:
-  ckan_storage:
-  pg_data:
-  solr_data:
-  pip_cache:
-  site_packages:
+---
+name: ckan
 
-services:
-
-  nginx:
-    build:
-      context: nginx/
-      dockerfile: Dockerfile
-    networks:
-      - webnet
-      - ckannet
-    depends_on:
-      ckan:
-        condition: service_healthy
-    ports:
-      - "0.0.0.0:${NGINX_SSLPORT_HOST}:${NGINX_SSLPORT}"
-    
-  ckan:
-    build:
-      context: ckan/
-      dockerfile: Dockerfile
-      args:
-        - TZ=${TZ}
-    networks:
-      - ckannet
-      - dbnet
-      - solrnet
-      - redisnet
+include:
+  - path: services/ckan/ckan.yaml
     env_file:
-      - .env
-    depends_on:
-      db:
-        condition: service_healthy
-      solr:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    volumes:
-      - ckan_storage:/var/lib/ckan
-      - pip_cache:/root/.cache/pip
-      - site_packages:/usr/lib/python3.10/site-packages
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:5000/api/action/status_show"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-    
-  datapusher:
-    networks:
-      - ckannet
-      - dbnet
-    image: ckan/ckan-base-datapusher:${DATAPUSHER_VERSION}
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8800"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
+      - config/ckan/.env
+      - .global-env
+    project_directory: .  
+  - path: services/nextjs/nextjs.yaml
+    env_file:
+      - config/nextjs/.env
+      - .global-env
+    project_directory: .
+  - path: services/nginx/nginx.yaml
+    env_file:
+      - config/nginx/.env
+      - .global-env
+    project_directory: .
+  - path: services/ckan-workers/ckan-worker-default.yaml
+    env_file:
+      - config/ckan/.env
+      - .global-env
+    project_directory: .
+  - path: services/ckan-workers/ckan-worker-bulk.yaml
+    env_file:
+    - config/ckan/.env
+    - .global-env
+    project_directory: .
+  - path: services/ckan-workers/ckan-worker-priority.yaml
+    env_file:
+      - config/ckan/.env
+      - .global-env
+    project_directory: .
+  - path: services/postgresql/postgres.yaml
+    env_file:
+      - config/db/.env
+      - .global-env
+    project_directory: .
+  # - path: services/postgis/postgis.yaml
+  #   env_file:
+  #     - config/db/.env
+  #     - .global-env
+  #   project_directory: .
+  - path: services/solr/solr.yaml
+    env_file:
+      - config/solr/.env
+      - .global-env
+    project_directory: .
+  - path: services/redis/redis.yaml
+    env_file:
+      - config/redis/.env
+      - .global-env
+    project_directory: .
 
-  db:
-    build:
-      context: postgresql/
-    networks:
-      - dbnet
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - CKAN_DB_USER
-      - CKAN_DB_PASSWORD
-      - CKAN_DB
-      - DATASTORE_READONLY_USER
-      - DATASTORE_READONLY_PASSWORD
-      - DATASTORE_DB
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
-     
-  solr:
-    networks:
-      - solrnet
-    image: ckan/ckan-solr:${SOLR_IMAGE_VERSION}
-    volumes:
-      - solr_data:/var/solr
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
-
-  redis:
-    image: redis:${REDIS_VERSION}
-    networks:
-      - redisnet
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "-e", "QUIT"]
-    
 networks:
-  webnet:
-  ckannet:
+  frontend:
+  backend:
+    internal: true
   solrnet:
     internal: true
   dbnet:

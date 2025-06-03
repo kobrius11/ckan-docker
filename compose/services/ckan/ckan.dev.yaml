@@ -19,6 +19,8 @@ services:
         solr:
           condition: service_healthy
           restart: true
+      ports:
+        - "0.0.0.0:${CKAN_PORT_HOST}:5000"
       env_file:
         - ./config/db/.env
         - ./config/ckan/.env

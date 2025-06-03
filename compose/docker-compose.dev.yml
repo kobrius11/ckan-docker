@@ -2,14 +2,19 @@
 name: ckan
 
 include:
-  - path: services/ckan/ckan.yaml
+  - path: services/ckan/ckan.dev.yaml
     env_file:
       - config/ckan/.env
       - .global-env
     project_directory: .  
-  - path: services/nextjs/nextjs.yaml
+  - path: services/nextjs/nextjs.dev.yaml
     env_file:
       - config/nextjs/.env
+      - .global-env
+    project_directory: .
+  - path: services/nginx/nginx.dev.yaml
+    env_file:
+      - config/nginx/.env
       - .global-env
     project_directory: .
   - path: services/ckan-workers/ckan-worker-default.yaml
@@ -48,6 +53,16 @@ include:
       - .global-env
     project_directory: .
 
+# networks:
+#   frontend:
+#   backend:
+
 networks:
   frontend:
   backend:
+  solrnet:
+    internal: true
+  dbnet:
+    internal: true
+  redisnet:
+    internal: true
