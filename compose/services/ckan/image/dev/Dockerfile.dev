@@ -18,48 +18,68 @@ ENV CKAN_DIR="${SRC_DIR}/ckan"
 ENV DATA_DIR="${APP_DIR}/data"
 ENV CKAN_INI="${APP_DIR}/ckan.ini"
 
+USER root
+
+RUN apt-get update && \
+    apt-get install -y supervisor
+
 # Default CKAN Extensions
-ENV ENVVARS_GIT_URL="https://github.com/okfn/ckanext-envvars"
-ENV ENVVARS_GIT_VERSION="v0.0.6"
+
+### XLoader ###
 ENV XLOADER_GIT_URL="https://github.com/ckan/ckanext-xloader.git"
 ENV XLOADER_GIT_VERSION="2.1.0"
 ENV XLOADER_REQUIREMENTS_URL="https://raw.githubusercontent.com/ckan/ckanext-xloader/refs/tags/${XLOADER_GIT_VERSION}/requirements.txt"
-ENV CKAN_AUTH_VERSION="v2.11"
 
-
-### XLoader ###
 RUN pip3 install -e git+${XLOADER_GIT_URL}@${XLOADER_GIT_VERSION}#egg=ckanext-xloader
 RUN pip3 install -r ${XLOADER_REQUIREMENTS_URL}
 RUN pip3 install -U requests[security]
 
 
 ### ckanext-auth # for api user login's
-RUN pip install --no-cache-dir -e git+https://github.com/datopian/ckanext-auth.git@${CKAN_AUTH_VERSION}#egg=ckanext-auth
+ENV CKAN_AUTH_GIT_URL="https://github.com/datopian/ckanext-auth.git"
+ENV CKAN_AUTH_VERSION="v2.11"
+
+RUN pip install --no-cache-dir -e git+${CKAN_AUTH_GIT_URL}@${CKAN_AUTH_VERSION}#egg=ckanext-auth
+
 
 ### Envvars
+ENV ENVVARS_GIT_URL="https://github.com/okfn/ckanext-envvars"
+ENV ENVVARS_GIT_VERSION="v0.0.6"
+
 # RUN pip3 install  -e git+${ENVVARS_GIT_URL}${ENVVARS_GIT_VERSION}#egg=ckanext-envvars --no-input
 # RUN pip3 install -r https://raw.githubusercontent.com/ckan/ckanext-envvars/refs/heads/master/dev-requirements.txt
 
+
 ### Harvester ###
-#RUN pip3 install -e 'git+https://github.com/ckan/ckanext-harvest.git@master#egg=ckanext-harvest' && \
-#    pip3 install -r ${APP_DIR}/src/ckanext-harvest/pip-requirements.txt
-# will also require gather_consumer and fetch_consumer processes running (please see https://github.com/ckan/ckanext-harvest)
+ENV CKAN_HARVESTER_GIT_URL="https://github.com/ckan/ckanext-harvest.git"
+ENV CKAN_HARVESTER_VERSION="v1.6.1"
+
+RUN pip3 install -e git+${CKAN_HARVESTER_GIT_URL}@${CKAN_HARVESTER_VERSION}#egg=ckanext-harvest && \
+   pip3 install -r ${APP_DIR}/src/ckanext-harvest/requirements.txt
+
+COPY --chown=ckan:ckan ckan_harvesting.conf /etc/supervisor/conf.d/ckan_harvesting.conf
+
 
 ### Scheming ###
-#RUN  pip3 install -e 'git+https://github.com/ckan/ckanext-scheming.git@master#egg=ckanext-scheming'
+ENV CKAN_SCHEMING_GIT_URL="https://github.com/ckan/ckanext-scheming.git"
+ENV CKAN_SCHEMING_VERSION="release-3.1.0"
+
+RUN  pip3 install -e git+${CKAN_SCHEMING_GIT_URL}@${CKAN_SCHEMING_VERSION}#egg=ckanext-scheming
 
 ### Pages ###
 #RUN  pip3 install -e git+https://github.com/ckan/ckanext-pages.git#egg=ckanext-pages
 
 ### DCAT ###
-#RUN  pip3 install -e git+https://github.com/ckan/ckanext-dcat.git@v0.0.6#egg=ckanext-dcat && \
-#     pip3 install -r https://raw.githubusercontent.com/ckan/ckanext-dcat/v0.0.6/requirements.txt
+ENV CKAN_DCAT_GIT_URL="https://github.com/ckan/ckanext-dcat.git"
+ENV CKAN_DCAT_VERSION="v2.4.0"
+ENV CKAN_DCAT_REQUIREMENTS="https://raw.githubusercontent.com/ckan/ckanext-dcat/${CKAN_DCAT_VERSION}/requirements.txt"
+
+RUN  pip3 install -e git+${CKAN_DCAT_GIT_URL}@${CKAN_DCAT_VERSION}#egg=ckanext-dcat && \
+    pip3 install -r ${CKAN_DCAT_REQUIREMENTS}
 
 # Clone the extension(s) your are writing for your own project in the `src` folder
 # to get them mounted in this image at runtime
 
-
-USER root
 
 # Create and update CKAN config
 RUN echo "UTC" >  /etc/timezone && \

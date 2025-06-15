@@ -1,0 +1,27 @@
+@CKAN_HOST=https://127.0.0.1:443
+@ACTION=/api/action/
+
+###
+
+GET {{CKAN_HOST}}{{ACTION}}status_show
+
+###
+
+GET {{CKAN_HOST}}{{ACTION}}package_list
+
+###
+
+GET {{CKAN_HOST}}{{ACTION}}package_show
+Content-Type: application/json
+
+{
+    "id": "test"
+}
+
+###
+
+GET {{CKAN_HOST}}/dataset/test.jsonld
+
+###
+
+GET {{CKAN_HOST}}/catalog.xml

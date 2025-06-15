@@ -7,7 +7,7 @@ services:
         - frontend
         - backend
       depends_on:
-        ckan-dev:
+        dev:
           condition: service_healthy
           restart: true
       ports:

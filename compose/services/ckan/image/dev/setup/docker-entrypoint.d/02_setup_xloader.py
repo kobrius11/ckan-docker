@@ -46,5 +46,5 @@ def setup_xloader():
 
 if __name__ == "__main__":
     
-    print("[AFTERINIT 01_setup_xloader] Setting up xloader ...") 
+    print("[ENTRYPOINT 02_setup_xloader] Setting up xloader ...") 
     setup_xloader()

@@ -6,7 +6,7 @@ services:
     networks:
       - backend
     depends_on:
-      ckan-dev:
+      dev:
         condition: service_healthy
     ports:
       - "${NGINX_SSLPORT_HOST}:${NGINX_SSLPORT}"

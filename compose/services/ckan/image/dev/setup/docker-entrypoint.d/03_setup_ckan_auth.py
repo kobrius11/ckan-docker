@@ -11,5 +11,5 @@ sc = ScriptConfig()
 
 if __name__ == "__main__":
     
-    print("[ENTRYPOINT 02_setup_ckan_auth] Setting up Ckan Auth plugins variables ..")
+    print("[ENTRYPOINT 03_setup_ckan_auth] Setting up Ckan Auth plugins variables ..")
     sc.set_ckanvar("ckanext.auth.include_frontend_login_token")

@@ -1,6 +1,6 @@
 ---
 services:
-  ckan-worker-priority:
+  worker-priority:
     build:
       context: ./services/ckan/image/dev
       dockerfile: Dockerfile.dev
@@ -11,7 +11,7 @@ services:
       - dbnet
       - redisnet
     depends_on:
-      ckan-dev:
+      dev:
         condition: service_healthy
         restart: true
       postgres:

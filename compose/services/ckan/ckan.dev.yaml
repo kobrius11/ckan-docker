@@ -1,6 +1,6 @@
 ---
 services:
-  ckan-dev:
+  dev:
       build:
         context: ./services/ckan/image/dev
         dockerfile: Dockerfile.dev
