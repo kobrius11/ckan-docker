@@ -33,6 +33,7 @@ def setup_xloader():
         sc.set_ckanvar("ckanext.xloader.enforce_schema")
 
         #TODO: Fix needed, api_token gets created twice
+        # check is sysadmin already has defined apitoken named xloader
         API_TOKEN_ENV = sc.env.get_envvar(sc.env.construct_envvar("ckanext.xloader.api_token"))
 
         if not API_TOKEN_ENV:

@@ -12,7 +12,7 @@ sc = ScriptConfig()
 
 if __name__ == "__main__":
     
-    print("[ENTRYPOINT 01_setup_envvars] Setting up Enviroment variables ..")
+    print(f"[ENTRYPOINT {__file__}] Setting up Enviroment variables ..")
     sc.set_ckanvar("ckan.plugins")
     sc.set_ckanvar("ckan.webassets.path")
     sc.set_ckanvar("ckan.webassets.url")

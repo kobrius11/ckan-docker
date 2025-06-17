@@ -10,12 +10,14 @@ from lib.script_config import ScriptConfig
 sc = ScriptConfig()
 
 if __name__ == "__main__":
+    is_harvester = "harvest ckan_harvester" in sc.env.get_envvar("CKAN__PLUGINS")
     
-    print("[ENTRYPOINT 04_setup_harverster] Setting up Ckan Harvester plugin variables ..")
-    sc.set_ckanvar("ckan.harvest.timeout")
-    sc.set_ckanvar("ckan.harvest.mq.type")
-    sc.set_ckanvar("ckan.harvest.mq.hostname")
-    sc.set_ckanvar("ckan.harvest.mq.port")
-    sc.set_ckanvar("ckan.harvest.mq.redis_db")
-    # sc.set_ckanvar("ckan.harvest.mq.password")
+    if is_harvester:
+        print("[ENTRYPOINT 04_setup_harverster] Setting up Ckan Harvester plugin variables ..")
+        sc.set_ckanvar("ckan.harvest.timeout")
+        sc.set_ckanvar("ckan.harvest.mq.type")
+        sc.set_ckanvar("ckan.harvest.mq.hostname")
+        sc.set_ckanvar("ckan.harvest.mq.port")
+        sc.set_ckanvar("ckan.harvest.mq.redis_db")
+        # sc.set_ckanvar("ckan.harvest.mq.password")
 

@@ -1,0 +1,26 @@
+[project]
+name = "ckan-docker-cli"
+description = "Cli application built with click, used for managing ckan-docker images"
+version = "0.0.1"
+authors = [
+    {name= "Žygimantas Bičkus"}
+]
+maintainers = [
+  {name = "Žygimantas Bičkus"}
+]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11.2"
+dependencies = [
+    "click>=8.1.7",
+]
+
+[project.scripts]
+ckan-docker-cli = "ckan_docker_cli.main:cli"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "ckan_docker_cli"

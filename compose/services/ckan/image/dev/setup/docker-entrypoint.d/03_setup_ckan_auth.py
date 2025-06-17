@@ -10,6 +10,8 @@ from lib.script_config import ScriptConfig
 sc = ScriptConfig()
 
 if __name__ == "__main__":
-    
-    print("[ENTRYPOINT 03_setup_ckan_auth] Setting up Ckan Auth plugins variables ..")
-    sc.set_ckanvar("ckanext.auth.include_frontend_login_token")
+    is_auth = "auth" in sc.env.get_envvar("CKAN__PLUGINS")
+
+    if is_auth:
+        print("[ENTRYPOINT 03_setup_ckan_auth] Setting up Ckan Auth plugins variables ..")
+        sc.set_ckanvar("ckanext.auth.include_frontend_login_token")
