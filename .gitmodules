@@ -1,0 +1,3 @@
+[submodule "compose/services/ckan/image/dev/src/ckanext-oaipmh"]
+	path = compose/services/ckan/image/dev/src/ckanext-oaipmh
+	url = https://github.com/mediasuitenz/ckanext-oaipmh

@@ -223,6 +223,35 @@ def create_sysadmin():
         print(("[prerun] Made user {0} a sysadmin".format(name)))
 
 
+def create_harvest_sysadmin():
+    print("[prerun] Start create_harvest_sysadmin...")
+
+    name = "harvest"
+    password = "password"
+    email = "harvest@harvest.com"
+
+    # Create user
+    command = [
+        "ckan",
+        "-c",
+        ckan_ini,
+        "user",
+        "add",
+        name,
+        "password=" + password,
+        "email=" + email,
+    ]
+
+    subprocess.call(command)
+    print(("[prerun] Created user {0}".format(name)))
+
+    # Make it sysadmin
+    command = ["ckan", "-c", ckan_ini, "sysadmin", "add", name]
+
+    subprocess.call(command)
+    print(("[prerun] Made user {0} a sysadmin".format(name)))
+
+
 if __name__ == "__main__":
     maintenance = os.environ.get("MAINTENANCE_MODE", "").lower() == "true"
 
@@ -235,3 +264,4 @@ if __name__ == "__main__":
         if os.environ.get("CKAN_DATASTORE_WRITE_URL"):
             init_datastore()
         create_sysadmin()
+        create_harvest_sysadmin() # temporary!!!

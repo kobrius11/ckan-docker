@@ -1,5 +1,6 @@
 import os
 import sys
+import shlex
 from pathlib import Path
 import subprocess
 
@@ -25,7 +26,7 @@ def full_rebuild(yaml: Path):
     docker_compose(yaml, "up", "--force-recreate")
 
 def bash(yaml: Path, container_name: str, *args):
-    command = " ".join(args)
+    command = shlex.join(args)
     docker_exec(yaml, container_name, "bash", "-c", command)
 
 def ckan(yaml: Path, container_name: str, *args):

@@ -76,3 +76,9 @@ class ScriptConfig():
                 print("Error occurred while generating or setting the API token:")
                 print(e.stderr)
                 sys.exit(1)
+
+    def try_create_user():
+        pass
+
+    def make_user_admin():
+        pass
